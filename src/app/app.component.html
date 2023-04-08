@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="base">
+        <div class="info">
+            <h2>Currency RUB</h2>
+            <p>{{getDate() | date : 'dd.MM.yyyy, hh:mm:ss'}}</p>
+        </div>
+        <div class="tools">
+            <ng-container *ngIf="getRemainingSymbols() as remainingSyms">
+                <button class="icon dropdown" *ngIf="remainingSyms.length">
+                    <span class="material-icons-outlined">
+                        add
+                    </span>
+                    <div class="dropdown-content">
+                        <p class="addCurrency" 
+                            *ngFor="let cur of remainingSyms"
+                            (click)="addCurrency(cur)">
+                            {{cur}}
+                        </p>
+                    </div>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+    <div class="currencies" [ngClass]="{'loading': loading$.asObservable() | async}">
+        <div class="item" *ngFor="let cur of symbols">
+            <div class="name">{{cur}}</div>
+            <div class="value" *ngIf="getValue(cur) as data">
+                <span>{{data.current?.toFixed(2)}}</span>
+                <span class="arrow">
+                    <ng-container *ngIf="(data.current || 0) - (data.previous || 0) as diff">
+                        <span class="material-icons-outlined" *ngIf="diff > 0">
+                            arrow_drop_up
+                        </span>
+                        <span class="material-icons-outlined" *ngIf="diff < 0">
+                            arrow_drop_down
+                        </span>
+                    </ng-container>
+                </span>
+                <span class="diff">({{((data.current || 0) - (data.previous || 0)).toFixed(2)}})</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- <button (click)="buttonListener.next('')">Update</button> -->
+</div>
